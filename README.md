@@ -40,8 +40,6 @@ npm run preview     # ビルド成果物をローカルで配信
 1. リポジトリの Settings → Pages → Source を **GitHub Actions** に設定
 2. master に push
 
-公開 URL: <https://nisioka.github.io/toy-cash-registor/>
-
 ## 技術スタック
 
 - Vite + TypeScript (Vanilla)
