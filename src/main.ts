@@ -30,6 +30,7 @@ function showScreen(target: HTMLElement) {
 function renderTotals() {
   countEl.textContent = String(cart.count());
   totalEl.textContent = `${cart.total()}えん`;
+  payButton.disabled = cart.count() === 0;
 }
 
 let hideLastItemTimer: number | null = null;
@@ -76,7 +77,8 @@ async function handleStart() {
 }
 
 async function handlePay() {
-  if (cart.count() === 0) return;
+  if (cart.count() === 0 || payButton.disabled) return;
+  payButton.disabled = true;
   const total = cart.total();
   playChime();
   thanksTotalEl.textContent = `ごうけい ${total}えん もらいました`;

@@ -4,8 +4,9 @@ export function initAudio(): void {
   if (ctx) return;
   const AudioCtor =
     window.AudioContext ||
-    (window as unknown as { webkitAudioContext: typeof AudioContext })
+    (window as unknown as { webkitAudioContext?: typeof AudioContext })
       .webkitAudioContext;
+  if (!AudioCtor) return;
   ctx = new AudioCtor();
 }
 
