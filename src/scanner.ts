@@ -60,7 +60,7 @@ export class Scanner {
     if (!this.html5Qrcode) return;
     try {
       await this.html5Qrcode.stop();
-      await this.html5Qrcode.clear();
+      this.html5Qrcode.clear();
     } catch {
       // ignore
     }

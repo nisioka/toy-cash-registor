@@ -20,11 +20,22 @@ const lastItemPrice = lastItemEl.querySelector('.last-item-price') as HTMLElemen
 const countEl = document.getElementById('count')!;
 const totalEl = document.getElementById('total')!;
 const thanksTotalEl = document.getElementById('thanks-total')!;
+const errorEl = document.getElementById('error-message')!;
 
 function showScreen(target: HTMLElement) {
   for (const s of [startScreen, playScreen, thanksScreen]) {
     s.classList.toggle('hidden', s !== target);
   }
+}
+
+function showError(message: string) {
+  errorEl.textContent = message;
+  errorEl.classList.remove('hidden');
+}
+
+function clearError() {
+  errorEl.textContent = '';
+  errorEl.classList.add('hidden');
 }
 
 function renderTotals() {
@@ -64,14 +75,15 @@ function handleDetected(code: string) {
 async function handleStart() {
   initAudio();
   startButton.disabled = true;
+  clearError();
   try {
     showScreen(playScreen);
     renderTotals();
     await scanner.start('reader', handleDetected);
   } catch (err) {
     console.error(err);
-    alert('カメラをひらけませんでした。せっていでカメラをゆるしてください。');
     showScreen(startScreen);
+    showError('カメラをひらけませんでした。せっていでカメラをゆるしてください。');
     startButton.disabled = false;
   }
 }
@@ -94,8 +106,8 @@ async function handlePay() {
       await scanner.start('reader', handleDetected);
     } catch (err) {
       console.error(err);
-      alert('カメラのさいきどうにしっぱいしました。');
       showScreen(startScreen);
+      showError('カメラのさいきどうにしっぱいしました。');
       startButton.disabled = false;
     }
   }, 2500);
