@@ -91,13 +91,29 @@ function handleDetected(code: string) {
   renderTotals();
 }
 
-async function startScannerOrFallback(errorMessage: string): Promise<void> {
+function cameraErrorMessage(err: unknown, fallback: string): string {
+  const name = err instanceof Error ? err.name : '';
+  const message = err instanceof Error ? err.message : String(err);
+  const signal = `${name} ${message}`;
+  if (/NotAllowed|Permission/i.test(signal)) {
+    return 'カメラをひらけませんでした。せっていでカメラをゆるしてください。';
+  }
+  if (/NotFound|DevicesNotFound/i.test(signal)) {
+    return 'カメラがみつかりませんでした。';
+  }
+  if (/NotReadable|TrackStart/i.test(signal)) {
+    return 'カメラがほかのアプリでつかわれているかもしれません。';
+  }
+  return fallback;
+}
+
+async function startScannerOrFallback(fallbackMessage: string): Promise<void> {
   try {
     await scanner.start('reader', handleDetected);
   } catch (err) {
     console.error(err);
     showScreen(startScreen);
-    showError(errorMessage);
+    showError(cameraErrorMessage(err, fallbackMessage));
     startButton.disabled = false;
   }
 }
