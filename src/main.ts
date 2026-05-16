@@ -112,20 +112,20 @@ async function handlePay() {
   showScreen(thanksScreen);
   await scanner.stop();
 
-  window.setTimeout(async () => {
-    cart.reset();
-    renderTotals();
-    lastItemEl.classList.add('hidden');
-    showScreen(playScreen);
-    try {
-      await scanner.start('reader', handleDetected);
-    } catch (err) {
-      console.error(err);
-      showScreen(startScreen);
-      showError('カメラのさいきどうにしっぱいしました。');
-      startButton.disabled = false;
-    }
-  }, 2500);
+  await new Promise((resolve) => window.setTimeout(resolve, 2500));
+
+  cart.reset();
+  renderTotals();
+  lastItemEl.classList.add('hidden');
+  showScreen(playScreen);
+  try {
+    await scanner.start('reader', handleDetected);
+  } catch (err) {
+    console.error(err);
+    showScreen(startScreen);
+    showError('カメラのさいきどうにしっぱいしました。');
+    startButton.disabled = false;
+  }
 }
 
 startButton.addEventListener('click', handleStart);
