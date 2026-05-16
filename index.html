@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#ff8a3d" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="レジごっこ" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+    <title>レジごっこ</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="app-header">
+        <h1>レジごっこ</h1>
+      </header>
+
+      <main>
+        <section id="start-screen" class="screen">
+          <div class="start-illustration">🛒</div>
+          <p class="start-message">バーコードをピッ!とよみとってあそぼう</p>
+          <button id="start-button" class="primary-button">スタート</button>
+        </section>
+
+        <section id="play-screen" class="screen hidden">
+          <div id="reader" class="reader"></div>
+
+          <div id="last-item" class="last-item hidden">
+            <div class="last-item-name"></div>
+            <div class="last-item-price"></div>
+          </div>
+
+          <div class="totals">
+            <div class="totals-row">
+              <span class="totals-label">てんすう</span>
+              <span id="count" class="totals-value">0</span>
+            </div>
+            <div class="totals-row totals-row-main">
+              <span class="totals-label">ごうけい</span>
+              <span id="total" class="totals-value">0えん</span>
+            </div>
+          </div>
+
+          <button id="pay-button" class="primary-button">おしはらい</button>
+        </section>
+
+        <section id="thanks-screen" class="screen hidden">
+          <div class="thanks-emoji">🎉</div>
+          <p class="thanks-message">ありがとう!</p>
+          <p id="thanks-total" class="thanks-total"></p>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
