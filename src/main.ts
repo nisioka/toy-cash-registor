@@ -9,18 +9,33 @@ registerSW({ immediate: true });
 const cart = new Cart();
 const scanner = new Scanner();
 
-const startScreen = document.getElementById('start-screen')!;
-const playScreen = document.getElementById('play-screen')!;
-const thanksScreen = document.getElementById('thanks-screen')!;
-const startButton = document.getElementById('start-button') as HTMLButtonElement;
-const payButton = document.getElementById('pay-button') as HTMLButtonElement;
-const lastItemEl = document.getElementById('last-item')!;
-const lastItemName = lastItemEl.querySelector('.last-item-name') as HTMLElement;
-const lastItemPrice = lastItemEl.querySelector('.last-item-price') as HTMLElement;
-const countEl = document.getElementById('count')!;
-const totalEl = document.getElementById('total')!;
-const thanksTotalEl = document.getElementById('thanks-total')!;
-const errorEl = document.getElementById('error-message')!;
+function el<T extends HTMLElement = HTMLElement>(id: string): T {
+  const found = document.getElementById(id);
+  if (!found) throw new Error(`Element with id "${id}" not found`);
+  return found as T;
+}
+
+function elQuery<T extends HTMLElement = HTMLElement>(
+  parent: HTMLElement,
+  selector: string,
+): T {
+  const found = parent.querySelector<T>(selector);
+  if (!found) throw new Error(`Element matching "${selector}" not found`);
+  return found;
+}
+
+const startScreen = el('start-screen');
+const playScreen = el('play-screen');
+const thanksScreen = el('thanks-screen');
+const startButton = el<HTMLButtonElement>('start-button');
+const payButton = el<HTMLButtonElement>('pay-button');
+const lastItemEl = el('last-item');
+const lastItemName = elQuery(lastItemEl, '.last-item-name');
+const lastItemPrice = elQuery(lastItemEl, '.last-item-price');
+const countEl = el('count');
+const totalEl = el('total');
+const thanksTotalEl = el('thanks-total');
+const errorEl = el('error-message');
 
 function showScreen(target: HTMLElement) {
   for (const s of [startScreen, playScreen, thanksScreen]) {

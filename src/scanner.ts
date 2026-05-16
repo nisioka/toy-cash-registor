@@ -61,8 +61,8 @@ export class Scanner {
     try {
       await this.html5Qrcode.stop();
       this.html5Qrcode.clear();
-    } catch {
-      // ignore
+    } catch (err) {
+      console.warn('Scanner stop/clear failed (may already be stopped)', err);
     }
     this.html5Qrcode = null;
   }
