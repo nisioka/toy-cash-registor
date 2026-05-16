@@ -2,6 +2,17 @@ import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 
 const COOLDOWN_MS = 2000;
 
+const SUPPORTED_FORMATS = [
+  Html5QrcodeSupportedFormats.QR_CODE,
+  Html5QrcodeSupportedFormats.EAN_13,
+  Html5QrcodeSupportedFormats.EAN_8,
+  Html5QrcodeSupportedFormats.UPC_A,
+  Html5QrcodeSupportedFormats.UPC_E,
+  Html5QrcodeSupportedFormats.CODE_128,
+  Html5QrcodeSupportedFormats.CODE_39,
+  Html5QrcodeSupportedFormats.ITF,
+];
+
 export class Scanner {
   private html5Qrcode: Html5Qrcode | null = null;
   private lastCode: string | null = null;
@@ -11,21 +22,13 @@ export class Scanner {
     elementId: string,
     onDetected: (code: string) => void,
   ): Promise<void> {
-    const formats = [
-      Html5QrcodeSupportedFormats.QR_CODE,
-      Html5QrcodeSupportedFormats.EAN_13,
-      Html5QrcodeSupportedFormats.EAN_8,
-      Html5QrcodeSupportedFormats.UPC_A,
-      Html5QrcodeSupportedFormats.UPC_E,
-      Html5QrcodeSupportedFormats.CODE_128,
-      Html5QrcodeSupportedFormats.CODE_39,
-      Html5QrcodeSupportedFormats.ITF,
-    ];
-
     if (this.html5Qrcode) {
       await this.stop();
     }
-    this.html5Qrcode = new Html5Qrcode(elementId, { formatsToSupport: formats, verbose: false });
+    this.html5Qrcode = new Html5Qrcode(elementId, {
+      formatsToSupport: SUPPORTED_FORMATS,
+      verbose: false,
+    });
 
     await this.html5Qrcode.start(
       { facingMode: 'environment' },
@@ -65,5 +68,7 @@ export class Scanner {
       console.warn('Scanner stop/clear failed (may already be stopped)', err);
     }
     this.html5Qrcode = null;
+    this.lastCode = null;
+    this.lastTime = 0;
   }
 }

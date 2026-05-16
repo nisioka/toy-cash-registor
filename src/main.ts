@@ -80,6 +80,7 @@ function showLastItem(name: string, price: number) {
 }
 
 function handleDetected(code: string) {
+  if (playScreen.classList.contains('hidden')) return;
   const product = generateProduct(code);
   cart.add(product);
   playBeep();
@@ -87,20 +88,26 @@ function handleDetected(code: string) {
   renderTotals();
 }
 
-async function handleStart() {
-  initAudio();
-  startButton.disabled = true;
-  clearError();
+async function startScannerOrFallback(errorMessage: string): Promise<void> {
   try {
-    showScreen(playScreen);
-    renderTotals();
     await scanner.start('reader', handleDetected);
   } catch (err) {
     console.error(err);
     showScreen(startScreen);
-    showError('カメラをひらけませんでした。せっていでカメラをゆるしてください。');
+    showError(errorMessage);
     startButton.disabled = false;
   }
+}
+
+async function handleStart() {
+  initAudio();
+  startButton.disabled = true;
+  clearError();
+  showScreen(playScreen);
+  renderTotals();
+  await startScannerOrFallback(
+    'カメラをひらけませんでした。せっていでカメラをゆるしてください。',
+  );
 }
 
 async function handlePay() {
@@ -118,14 +125,7 @@ async function handlePay() {
   renderTotals();
   lastItemEl.classList.add('hidden');
   showScreen(playScreen);
-  try {
-    await scanner.start('reader', handleDetected);
-  } catch (err) {
-    console.error(err);
-    showScreen(startScreen);
-    showError('カメラのさいきどうにしっぱいしました。');
-    startButton.disabled = false;
-  }
+  await startScannerOrFallback('カメラのさいきどうにしっぱいしました。');
 }
 
 startButton.addEventListener('click', handleStart);
