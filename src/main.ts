@@ -58,7 +58,7 @@ function clearError() {
 
 function renderTotals() {
   countEl.textContent = String(cart.count());
-  totalEl.textContent = `${cart.total()}えん`;
+  totalEl.textContent = `${cart.total().toLocaleString()}えん`;
   payButton.disabled = cart.count() === 0;
 }
 
@@ -66,7 +66,7 @@ let hideLastItemTimer: number | null = null;
 
 function showLastItem(name: string, price: number) {
   lastItemName.textContent = name;
-  lastItemPrice.textContent = `${price}えん`;
+  lastItemPrice.textContent = `${price.toLocaleString()}えん`;
   lastItemEl.classList.remove('hidden');
   lastItemEl.style.animation = 'none';
   // restart animation
@@ -118,7 +118,7 @@ async function handlePay() {
   payButton.disabled = true;
   const total = cart.total();
   playChime();
-  thanksTotalEl.textContent = `ごうけい ${total}えん もらいました`;
+  thanksTotalEl.textContent = `ごうけい ${total.toLocaleString()}えん もらいました`;
   showScreen(thanksScreen);
   await scanner.stop();
 
