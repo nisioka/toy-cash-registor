@@ -6,6 +6,9 @@ import { registerSW } from 'virtual:pwa-register';
 
 registerSW({ immediate: true });
 
+const THANKS_SCREEN_DURATION_MS = 2500;
+const LAST_ITEM_DURATION_MS = 2500;
+
 const cart = new Cart();
 const scanner = new Scanner();
 
@@ -76,7 +79,7 @@ function showLastItem(name: string, price: number) {
   hideLastItemTimer = window.setTimeout(() => {
     lastItemEl.classList.add('hidden');
     hideLastItemTimer = null;
-  }, 2500);
+  }, LAST_ITEM_DURATION_MS);
 }
 
 function handleDetected(code: string) {
@@ -119,7 +122,9 @@ async function handlePay() {
   showScreen(thanksScreen);
   await scanner.stop();
 
-  await new Promise((resolve) => window.setTimeout(resolve, 2500));
+  await new Promise((resolve) =>
+    window.setTimeout(resolve, THANKS_SCREEN_DURATION_MS),
+  );
 
   cart.reset();
   renderTotals();
