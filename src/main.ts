@@ -1,0 +1,151 @@
+import { Cart } from './cart';
+import { generateProduct } from './product';
+import { Scanner } from './scanner';
+import { initAudio, playBeep, playChime } from './sound';
+import { registerSW } from 'virtual:pwa-register';
+
+registerSW({ immediate: true });
+
+const THANKS_SCREEN_DURATION_MS = 2500;
+const LAST_ITEM_DURATION_MS = 2500;
+
+const cart = new Cart();
+const scanner = new Scanner();
+
+function el<T extends HTMLElement = HTMLElement>(id: string): T {
+  const found = document.getElementById(id);
+  if (!found) throw new Error(`Element with id "${id}" not found`);
+  return found as T;
+}
+
+function elQuery<T extends HTMLElement = HTMLElement>(
+  parent: HTMLElement,
+  selector: string,
+): T {
+  const found = parent.querySelector<T>(selector);
+  if (!found) throw new Error(`Element matching "${selector}" not found`);
+  return found;
+}
+
+const startScreen = el('start-screen');
+const playScreen = el('play-screen');
+const thanksScreen = el('thanks-screen');
+const startButton = el<HTMLButtonElement>('start-button');
+const payButton = el<HTMLButtonElement>('pay-button');
+const lastItemEl = el('last-item');
+const lastItemName = elQuery(lastItemEl, '.last-item-name');
+const lastItemPrice = elQuery(lastItemEl, '.last-item-price');
+const countEl = el('count');
+const totalEl = el('total');
+const thanksTotalEl = el('thanks-total');
+const errorEl = el('error-message');
+
+function showScreen(target: HTMLElement) {
+  for (const s of [startScreen, playScreen, thanksScreen]) {
+    s.classList.toggle('hidden', s !== target);
+  }
+}
+
+function showError(message: string) {
+  errorEl.textContent = message;
+  errorEl.classList.remove('hidden');
+}
+
+function clearError() {
+  errorEl.textContent = '';
+  errorEl.classList.add('hidden');
+}
+
+function renderTotals() {
+  countEl.textContent = String(cart.count());
+  totalEl.textContent = `${cart.total().toLocaleString()}えん`;
+  payButton.disabled = cart.count() === 0;
+}
+
+let hideLastItemTimer: number | null = null;
+
+function showLastItem(name: string, price: number) {
+  lastItemName.textContent = name;
+  lastItemPrice.textContent = `${price.toLocaleString()}えん`;
+  lastItemEl.classList.remove('hidden');
+  lastItemEl.style.animation = 'none';
+  // restart animation
+  void lastItemEl.offsetWidth;
+  lastItemEl.style.animation = '';
+
+  if (hideLastItemTimer !== null) {
+    window.clearTimeout(hideLastItemTimer);
+  }
+  hideLastItemTimer = window.setTimeout(() => {
+    lastItemEl.classList.add('hidden');
+    hideLastItemTimer = null;
+  }, LAST_ITEM_DURATION_MS);
+}
+
+function handleDetected(code: string) {
+  if (playScreen.classList.contains('hidden')) return;
+  const product = generateProduct(code);
+  cart.add(product);
+  playBeep();
+  showLastItem(product.name, product.price);
+  renderTotals();
+}
+
+function cameraErrorMessage(err: unknown, fallback: string): string {
+  const name = err instanceof Error ? err.name : '';
+  const message = err instanceof Error ? err.message : String(err);
+  const signal = `${name} ${message}`;
+  if (/NotAllowed|Permission/i.test(signal)) {
+    return 'カメラをひらけませんでした。せっていでカメラをゆるしてください。';
+  }
+  if (/NotFound|DevicesNotFound/i.test(signal)) {
+    return 'カメラがみつかりませんでした。';
+  }
+  if (/NotReadable|TrackStart/i.test(signal)) {
+    return 'カメラがほかのアプリでつかわれているかもしれません。';
+  }
+  return fallback;
+}
+
+async function startScannerOrFallback(fallbackMessage: string): Promise<void> {
+  try {
+    await scanner.start('reader', handleDetected);
+  } catch (err) {
+    console.error(err);
+    showScreen(startScreen);
+    showError(cameraErrorMessage(err, fallbackMessage));
+    startButton.disabled = false;
+  }
+}
+
+async function handleStart() {
+  initAudio();
+  startButton.disabled = true;
+  clearError();
+  showScreen(playScreen);
+  renderTotals();
+  await startScannerOrFallback(
+    'カメラをひらけませんでした。せっていでカメラをゆるしてください。',
+  );
+}
+
+async function handlePay() {
+  if (cart.count() === 0 || payButton.disabled) return;
+  payButton.disabled = true;
+  const total = cart.total();
+  playChime();
+  thanksTotalEl.textContent = `ごうけい ${total.toLocaleString()}えん もらいました`;
+  showScreen(thanksScreen);
+
+  await new Promise((resolve) =>
+    window.setTimeout(resolve, THANKS_SCREEN_DURATION_MS),
+  );
+
+  cart.reset();
+  renderTotals();
+  lastItemEl.classList.add('hidden');
+  showScreen(playScreen);
+}
+
+startButton.addEventListener('click', handleStart);
+payButton.addEventListener('click', handlePay);

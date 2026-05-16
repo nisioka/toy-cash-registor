@@ -1,0 +1,202 @@
+:root {
+  --primary: #ff8a3d;
+  --primary-dark: #e6671c;
+  --background: #fff8e7;
+  --card: #ffffff;
+  --text: #3a2a18;
+  --accent: #4ec3a3;
+  --shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--background);
+  color: var(--text);
+  font-family: 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic',
+    'Meiryo', system-ui, sans-serif;
+  font-weight: 700;
+  overscroll-behavior: none;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+  gap: 16px;
+}
+
+.app-header h1 {
+  margin: 0;
+  text-align: center;
+  font-size: 2rem;
+  color: var(--primary-dark);
+  letter-spacing: 0.1em;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: stretch;
+  flex: 1;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Start screen */
+.start-illustration {
+  font-size: 6rem;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.start-message {
+  font-size: 1.3rem;
+  text-align: center;
+  margin: 0;
+}
+
+.primary-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 20px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-family: inherit;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+}
+
+.primary-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+
+.error-message {
+  margin: 0;
+  padding: 12px 16px;
+  background: #ffe2d6;
+  color: #b1391a;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Play screen */
+.reader {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.reader video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+.last-item {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  animation: pop 0.3s ease;
+}
+
+.last-item-name {
+  font-size: 1.5rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.last-item-price {
+  font-size: 2rem;
+  color: var(--primary-dark);
+}
+
+@keyframes pop {
+  0% { transform: scale(0.7); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.totals {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 1.1rem;
+}
+
+.totals-row-main {
+  font-size: 1.6rem;
+  color: var(--primary-dark);
+  border-top: 2px dashed #eadfc8;
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.totals-label {
+  color: var(--text);
+}
+
+.totals-value {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Thanks screen */
+.thanks-emoji {
+  font-size: 6rem;
+  text-align: center;
+  margin-top: 60px;
+  animation: pop 0.4s ease;
+}
+
+.thanks-message {
+  text-align: center;
+  font-size: 2.2rem;
+  color: var(--primary-dark);
+  margin: 0;
+}
+
+.thanks-total {
+  text-align: center;
+  font-size: 1.3rem;
+  margin: 0;
+}
