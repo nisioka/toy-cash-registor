@@ -92,6 +92,9 @@ async function handlePay() {
       await scanner.start('reader', handleDetected);
     } catch (err) {
       console.error(err);
+      alert('カメラのさいきどうにしっぱいしました。');
+      showScreen(startScreen);
+      startButton.disabled = false;
     }
   }, 2500);
 }

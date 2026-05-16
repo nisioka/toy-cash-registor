@@ -22,6 +22,9 @@ export class Scanner {
       Html5QrcodeSupportedFormats.ITF,
     ];
 
+    if (this.html5Qrcode) {
+      await this.stop();
+    }
     this.html5Qrcode = new Html5Qrcode(elementId, { formatsToSupport: formats, verbose: false });
 
     await this.html5Qrcode.start(
