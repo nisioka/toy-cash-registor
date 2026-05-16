@@ -136,7 +136,6 @@ async function handlePay() {
   playChime();
   thanksTotalEl.textContent = `ごうけい ${total.toLocaleString()}えん もらいました`;
   showScreen(thanksScreen);
-  await scanner.stop();
 
   await new Promise((resolve) =>
     window.setTimeout(resolve, THANKS_SCREEN_DURATION_MS),
@@ -146,7 +145,6 @@ async function handlePay() {
   renderTotals();
   lastItemEl.classList.add('hidden');
   showScreen(playScreen);
-  await startScannerOrFallback('カメラのさいきどうにしっぱいしました。');
 }
 
 startButton.addEventListener('click', handleStart);
