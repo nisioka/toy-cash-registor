@@ -4,6 +4,8 @@
 
 家にある食品・本・おもちゃのバーコードを使って遊べます。
 
+公開 URL: <https://nisioka.github.io/toy-cash-registor/>
+
 ## 特徴
 
 - 同じバーコード → いつも同じ商品名・価格 (バーコード文字列をシードに決定論的生成)
@@ -37,8 +39,6 @@ npm run preview     # ビルド成果物をローカルで配信
 
 1. リポジトリの Settings → Pages → Source を **GitHub Actions** に設定
 2. master に push
-
-公開 URL: `https://<username>.github.io/toy-cash-registor/`
 
 ## 技術スタック
 
